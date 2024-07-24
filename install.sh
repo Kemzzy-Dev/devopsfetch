@@ -24,7 +24,7 @@ Description=DevOps Fetch Service
 After=network.target
 
 [Service]
-ExecStart=/home/ubuntu/devopsfetch/devopsfetch.sh
+ExecStart=/home/ubuntu/devopsfetch/devopsfetch.sh 
 Restart=always
 StandardOutput=file:/var/log/devopsfetch/devopsfetch.log
 StandardError=file:/var/log/devopsfetch/devopsfetch.log
