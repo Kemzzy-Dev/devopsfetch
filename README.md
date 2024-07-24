@@ -9,6 +9,13 @@ The features includes:
 - **Log Rotation**: Rotating logs
 - **Displaying System Information**: It displays system information in a well presented manner
 
+## Dependencies
+
+- `docker`
+- `nginx`
+- `yq`
+- `net-tools`
+
 
 ## Usage
 To use `devopsfetch`, run the installation script to install all dependencies and set up logging and systemd.
@@ -28,10 +35,10 @@ The tool will output the requested information in a clear format
 
 3. Run the installation script
    ```bash
-    ./install.sh
+    sudo ./install.sh
 
 4. Start using the program
-    `Refer to the guide above`
+    `Refer to the guide below`
 
 
 ### Commands
@@ -81,3 +88,4 @@ The tool will output the requested information in a clear format
 Use the help flag to display usage instructions for the program:
 - Flag: `-h` or `--help`
 - Usage: `./devopsfetch.sh -h` or `./devopsfetch.sh --help`
+

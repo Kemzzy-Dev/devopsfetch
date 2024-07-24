@@ -44,12 +44,13 @@ get_docker_info() {
 
 get_nginx_info() {
     if [ -z "$1" ]; then
-        sudo grep -r -E '^\s*server_name|^\s*listen' /etc/nginx/ | awk -F'[ :]+' '/listen/ {port=$NF} /server_name/ {print $NF " " port}' | sort | column -t -N "SERVER_NAME,PORT"
+        sudo grep -r -E '^\s*server_name|^\s*listen' /etc/nginx/ | awk -F'[ :]+' '/listen/ {port=$NF} /server_name/ {print $NF " " port}' | sort | column -t -N "SERVER_NAME,PORT"| tr -d ';'
     else
-        sudo grep -r -E '^\s*server_name|^\s*listen' /etc/nginx/ | awk -F'[ :]+' '/listen/ {port=$NF} /server_name/ {print $NF " " port}' | grep $1 | column -t -N "SERVER_NAME,PORT"
+        sudo grep -r -E '^\s*server_name|^\s*listen' /etc/nginx/ | awk -F'[ :]+' '/listen/ {port=$NF} /server_name/ {print $NF " " port}' | grep $1 | column -t -N "SERVER_NAME,PORT"| tr -d ';'
 
     fi
 }
+
 
 get_user_info() {
     if [ -z "$1" ]; then
@@ -63,17 +64,17 @@ get_user_info() {
     else
         (last -w | grep -vE '^(reboot|wtmp)' | awk -v user="$1" '$1 == user {print $1, $4, $5, $6, $7}'; 
         if ! last -w | grep -q "^$1 "; then 
-            echo "$specific_user Never"
+            echo "$1 Never"
         fi) | sort | column -t -N "USER,LAST_LOGIN"
     fi
 }
 
 
 get_time_range_info() {
-    if [ -z "$1" ]; then
-        last | column -t
+    if [ -z "$2" ]; then
+        journalctl --since=$1 --until="$1 23:59:59"
     else
-        awk "/$1/,/$2/" $LOG_FILE
+        journalctl --since="$1" --until="$2"
     fi
 }
 
@@ -101,9 +102,10 @@ while [[ "$#" -gt 0 ]]; do
             get_user_info $USER
             ;;
         -t|--time)
-            TIME_RANGE=$2
+            TIME_FROM=$2
+            TIME_TO=$3
             shift "$#"
-            get_time_range_info $TIME_RANGE
+            get_time_range_info $TIME_FROM $TIME_TO
             ;;
         -h|--help)
             display_usage

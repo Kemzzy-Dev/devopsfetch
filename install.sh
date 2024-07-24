@@ -13,6 +13,10 @@ install_dependencies() {
 
     # Create log directory
     sudo mkdir -p /var/log/devopsfetch
+
+    # copy devopsfetch.sh
+    cp devopsfetch.sh /usr/local/bin/devopsfetch
+    chmod +x /usr/local/bin/devopsfetch
 }
 
 # Function to create the systemd service
@@ -24,15 +28,13 @@ Description=DevOps Fetch Service
 After=network.target
 
 [Service]
-ExecStart=/home/ubuntu/devopsfetch/devopsfetch.sh 
+ExecStart=/usr/local/bin/devopsfetch -t now now
 Restart=always
-StandardOutput=file:/var/log/devopsfetch/devopsfetch.log
-StandardError=file:/var/log/devopsfetch/devopsfetch.log
 
-[Timer]
-OnBootSec=1min
-OnUnitActiveSec=1min
-Unit=devopsfetch.service
+# [Timer]
+# OnBootSec=1min
+# OnUnitActiveSec=1min
+# Unit=devopsfetch.service
 
 [Install]
 WantedBy=multi-user.target
